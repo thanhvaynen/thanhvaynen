@@ -1,0 +1,448 @@
+create table sinhvien
+(
+	msv char(4) primary key,
+	tensv nvarchar(100) not null,
+	ngaysinh datetime,
+	gioitinh nvarchar(3),
+	quequan nvarchar(100) default null,
+	lop nvarchar(100) default null,
+	makhoa char(4) default null
+	foreign key (makhoa) references khoa(makhoa)
+)
+
+create	table khoa
+(
+	makhoa char(4) primary key,
+	tenkhoa nvarchar(100) not null,
+	truongkhoa nvarchar(100)
+)
+
+create table chuyennganh
+(
+	macn char(4) primary key,
+	tencn nvarchar(100) not null,
+	makhoa char(4)
+	FOREIGN key (makhoa) references khoa(makhoa)
+)
+
+create table HocPhan
+(
+	mahp char(10) primary key,
+	tenhp nvarchar(100)
+)
+create table sinhvien_dkhocphan
+(
+	msv char(4),
+	mahp char(10),
+	sltinchi int,
+	primary key (msv,mahp),
+	foreign key (msv) references sinhvien(msv),
+	foreign key (mahp) references hocphan(mahp)
+)
+
+create table Sinhvien_ketqua
+(
+	msv char(4),
+	mahp char(10),
+	diemtbmon float default null check (diemtbmon >=0  and diemtbmon <=10.0),
+	ketqua nvarchar(10) default null,
+	primary key(msv,mahp),
+	foreign key (msv,mahp) references sinhvien_dkhocphan(msv,mahp),
+)
+
+create table hocbong
+(
+	msv char(4),
+	sotien money,
+	foreign key (msv) references sinhvien(msv)
+)
+create table sinhvien_renluyen
+(
+	msv char(4) PRIMARY KEY,
+	diemrenluyen int default null,
+	datloai nvarchar(10) default null,
+	foreign key (msv) references sinhvien(msv)
+)
+create table tonghop
+(
+	msv char(4) primary key,
+	diemtong_heso4 float default null check (diemtong_heso4 >=0 and diemtong_heso4 <=4.0),
+	diemrenluyen int default null,
+	hocbong nvarchar(10) default null,
+	foreign key (msv) references sinhvien(msv)
+)
+
+insert into sinhvien 
+values ('SV01',N'Nguyễn văn thành',2003-07-03,N'nam',N'hà nội','K66CNPMA','CNTT')
+insert into sinhvien 
+values ('SV02',N'Nguyễn thị vân',2003-11-21,N'nữ',N'hà nội','K66CNPMB','CNTT')
+insert into sinhvien 
+values ('SV03',N'Lâm Minh Anh',2002-04-01,N'nam',N'hà nội','KT01','KTTC')
+insert into sinhvien 
+values ('SV04',N'Trần văn thiện',2003-12-03,N'nam',N'hà nội','K66CNPMA','CNTT')
+insert into sinhvien 
+values ('SV05',N'trần minh chiến',2003-02-01,N'nam',N'hà nội','KT01','KTTC')
+--thêm dữ liệu cho khoa
+
+insert into khoa
+values('CNTT',N'công nghệ thông tin',N'ngô công thắng')
+insert into khoa
+values('KTTC',N'Kế toán tài chính',N'nguyễn văn a')
+
+
+
+--thêm dữ liệu vào bảng chuyên ngành
+
+insert into chuyennganh
+values ('CNPM',N'công nghệ phần mềm','CNTT')
+
+insert into chuyennganh
+values ('KTKT',N'kiểm toán kế toán','KTTC')
+
+
+--thêm dữ liệu vào bảng học phần
+insert into hocphan
+values ('ML01020',N'chủ nghĩa mác lên nin')
+insert into hocphan
+values ('GT01016',N'giáo dục thể chất đại cương')
+insert into hocphan
+values ('TH01024',N'toán giải tích')
+insert into hocphan
+values ('TH02001',N'cơ sở dữ liệu')
+insert into hocphan
+values ('QS01013',N'quân sự')
+
+
+--thêm dữ liệu vào bảng sinh viên đăng kí học phần
+insert into sinhvien_dkhocphan
+values ('SV01','TH01024',3)
+insert into sinhvien_dkhocphan
+values ('SV01','TH02001',2)
+insert into sinhvien_dkhocphan
+values ('SV01','GT01016',1)
+
+insert into sinhvien_dkhocphan
+values ('SV02','GT01016',3)
+insert into sinhvien_dkhocphan
+values ('SV02','ML01020',2)
+insert into sinhvien_dkhocphan
+values ('SV02','QS01013',2)
+
+insert into sinhvien_dkhocphan
+values ('SV03','GT01016',1)
+insert into sinhvien_dkhocphan
+values ('SV03','ML01020',3)
+insert into sinhvien_dkhocphan
+values ('SV03','QS01013',2)
+
+insert into sinhvien_dkhocphan
+values ('SV04','TH01024',2)
+insert into sinhvien_dkhocphan
+values ('SV04','ML01020',2)
+insert into sinhvien_dkhocphan
+values ('SV04','TH02001',3)
+insert into sinhvien_dkhocphan
+values ('SV04','QS01013',2)
+
+
+insert into sinhvien_dkhocphan
+values ('SV05','TH01024',2)
+insert into sinhvien_dkhocphan
+values ('SV05','GT01016',2)
+insert into sinhvien_dkhocphan
+values ('SV05','TH02001',3)
+insert into sinhvien_dkhocphan
+values ('SV05','QS01013',2)
+
+--thêm dữ liệu vào bảng sinh viên kết quả
+insert into Sinhvien_ketqua
+values('SV01','TH01024',9.0,'Qua môn')
+insert into Sinhvien_ketqua
+values('SV01','TH02001',9.8,'Qua môn')
+insert into Sinhvien_ketqua
+values('SV01','GT01016',9.8,'Qua môn')
+
+
+insert into Sinhvien_ketqua
+values('SV02','GT01016',4.4,'Qua môn')
+insert into Sinhvien_ketqua
+values('SV02','ML01020',3.9,'trượt môn')
+insert into Sinhvien_ketqua
+values('SV02','QS01013',4.6,'Qua môn')
+
+insert into Sinhvien_ketqua
+values('SV03','GT01016',8.2,'Qua môn')
+insert into Sinhvien_ketqua
+values('SV03','ML01020',5.1,'qua môn')
+insert into Sinhvien_ketqua
+values('SV03','QS01013',7.7,'Qua môn')
+
+
+insert into Sinhvien_ketqua
+values('SV04','TH01024',8.7,'Qua môn')
+insert into Sinhvien_ketqua
+values('SV04','ML01020',6.6,'qua môn')
+insert into Sinhvien_ketqua
+values('SV04','TH02001',5.7,'Qua môn')
+insert into Sinhvien_ketqua
+values('SV04','QS01013',4.6,'Qua môn')
+
+insert into Sinhvien_ketqua
+values('SV05','TH01024',8.9,'Qua môn')
+insert into Sinhvien_ketqua
+values('SV05','GT01016',6.0,'qua môn')
+insert into Sinhvien_ketqua
+values('SV05','TH02001',5.7,'Qua môn')
+insert into Sinhvien_ketqua
+values('SV05','QS01013',4.6,'Qua môn')
+
+--thêm dữ liệu vào bảng sinh viên rèn luyện
+insert into sinhvien_renluyen
+values ('SV01',75,N'khá')
+insert into sinhvien_renluyen
+values ('SV02',90,N'giỏi')
+insert into sinhvien_renluyen
+values ('SV03',100,N'giỏi')
+insert into sinhvien_renluyen
+values ('SV04',87,N'giỏi')
+insert into sinhvien_renluyen
+values ('SV05',65,N'khá')
+
+
+
+
+--chèn dữ liệu vào bảng tổng hợp
+=
+
+--tạo trigger cho bảng sinh viên kết quả, khi điểm tb môn > 0 thì tự động cập nhật kết quả  = qua môn
+
+go
+create trigger tg_svkq on sinhvien_ketqua
+for update,insert
+as
+begin
+	declare @diemtb float,@msv char(4),@mahp char(10)
+	select @diemtb = diemtbmon,@msv=msv,@mahp =mahp from inserted
+	if(@diemtb >= 4.0 )
+	begin
+		update Sinhvien_ketqua set ketqua = N'Qua môn' where msv = @msv and mahp = @mahp
+	end
+	else if(@diemtb <4.0)
+		update Sinhvien_ketqua set ketqua = N'Trượt môn' where msv = @msv and mahp = @mahp
+	else if(@diemtb is null)
+		update Sinhvien_ketqua set ketqua =null where msv = @msv and mahp = @mahp
+end
+
+
+
+--tạo trigger tự cập nhật học bổng cho sinh viên, nếu điểm tb học kì >= 8.0 và điểm rèn luyện > 70
+go
+--cập nhật học bổng trên bảng sinhvien_ketqua
+create trigger tg_update_hocbong on sinhvien_ketqua
+for update,insert,delete
+as
+begin
+
+	declare @dtb float, @msv char(4),@min float,@diemrl int
+	select @msv =msv from inserted
+	select @diemrl = diemrenluyen from sinhvien_renluyen where msv = @msv
+	select @dtb = AVG(diemtbmon),@min = min(diemtbmon) from Sinhvien_ketqua where msv = @msv
+	if (@dtb >= 8.0 and @diemrl >=70 and @min >= 4.0)
+	begin
+		update hocbong set sotien=10000000 where msv = @msv
+	end
+	else if(@dtb < 8.0 or @diemrl <70 or @min < 4.0)
+	begin
+		if exists (select * from hocbong where msv = @msv)
+			begin
+				delete hocbong where msv = @msv
+			end
+	end
+	
+	update tonghop set diemtong_heso4 = (@dtb * 4) / 10 where msv = @msv
+end
+go
+
+create trigger tg_update_hocbong1 on sinhvien_ketqua
+for delete
+as
+begin
+	declare @dtb float, @msv char(4),@min float,@diemrl int
+	select @msv =msv from deleted
+	select @diemrl = diemrenluyen from sinhvien_renluyen where msv = @msv
+	select @dtb = AVG(diemtbmon),@min = min(diemtbmon) from Sinhvien_ketqua where msv = @msv
+	if (@dtb >= 8.0 and @diemrl >=70 and @min >= 4.0)
+	begin
+		if not exists (select * from hocbong where msv = @msv)
+			begin
+				insert into hocbong
+				values(@msv,1000000)
+			end
+	end
+	else if(@dtb < 8.0 or @diemrl <70 or @min < 4.0)
+	begin
+		if exists (select * from hocbong where msv = @msv)
+			begin
+				delete hocbong where msv = @msv
+			end
+	end
+end
+
+
+
+
+--trigger update bảng tổng hợp khi thay đỏi điểm trong bảng kết quả
+go
+
+--tạo trigger xóa sv khỏi bảng tổng hợp khi xóa sv đó khỏi bảng dk học phần
+go
+create trigger tg_delete_sv_dkhp on sinhvien_dkhocphan
+for delete
+as
+begin
+	declare @msv char(4)
+	select @msv = msv from deleted
+	if not exists (select * from sinhvien_dkhocphan where msv = @msv)
+		delete tonghop where msv = @msv
+end
+go
+
+
+create trigger tg_update_tonghop on sinhvien_ketqua
+for update
+as
+begin
+	declare @msv char(4),@dtb float
+	select @msv=msv from inserted
+	select @dtb= AVG(diemtbmon) from Sinhvien_ketqua
+		update tonghop set diemtong_heso4 = (@dtb * 4) / 10 where msv = @msv
+end
+
+--tạo trigger tự cập nhật học bổng cho sinh viên trên bảng rèn luyện, nếu điểm tb học kì >= 8.0 và điểm rèn luyện > 70
+go
+ALTER trigger tg_update_hocbong2 on sinhvien_renluyen
+for update,insert
+as
+begin
+	declare @msv char(4), @diemtb float,@diemrl int
+	select @msv = msv,@diemrl = diemrenluyen from inserted
+	select @diemtb = AVG(diemtbmon) from Sinhvien_ketqua where msv= @msv
+	if (@diemrl >=70 and @diemtb >=8.0)
+	begin
+	if not exists (select * from hocbong where msv = @msv)
+			begin
+				insert into hocbong
+				values(@msv,1000000)
+			end
+	end
+	else if (@diemrl <70 or @diemtb <8.0)
+	begin
+		if exists (select * from hocbong where msv = @msv)
+			begin
+				delete hocbong where msv = @msv
+			end
+	end
+
+	update tonghop set diemrenluyen = @diemrl where msv = @msv
+end
+
+go
+CREATE trigger tg_update_hocbong3 on sinhvien_renluyen
+for delete
+as
+begin
+	declare @msv char(4)
+	select @msv = msv from deleted
+	delete hocbong where msv= @msv
+end
+
+-- tạo trigger tự động cập nhật xếp loại rèn luyện : >50 loại khá, >80 giỏi ,<50 tb
+go
+CREATE trigger tg_xeploai on sinhvien_renluyen
+for update,insert
+as
+begin
+	declare @diem int,@msv char(4)
+	select @msv = msv,@diem=diemrenluyen from inserted
+	if(@diem >= 80)
+		update sinhvien_renluyen set datloai = N'Giỏi' where msv= @msv
+	else if (@diem <80 and @diem >=50)
+		update sinhvien_renluyen set datloai = N'Khá'where msv= @msv
+	else if(@diem is null)
+		update sinhvien_renluyen set datloai = null where msv= @msv
+	else if(@diem <50)
+		update sinhvien_renluyen set datloai = N'Trung bình'where msv= @msv
+end
+
+
+
+
+--trigger cho bảng sinh viên, khi thêm 1 sv mới :
+go
+create trigger tg_themsv on sinhvien
+for insert,update
+as
+begin
+	declare @msv char(4)
+	select @msv = msv from inserted
+	insert into sinhvien_renluyen values(@msv,null,null)
+	insert into tonghop values (@msv,null,null,null)
+end
+
+
+--tạo trigger thêm sinh viên vào bảng sinhvien_ketqua khi thực hiện đăng kí học phần cho sv đó, giá trị điểm mặc định là null
+go
+create trigger tg_sv_dkhp on sinhvien_dkhocphan
+for insert,update
+as
+begin
+	declare @msv char(4), @mahp char(10)
+	select @msv=msv,@mahp = mahp from inserted
+	if not exists (select * from Sinhvien_ketqua where msv = @msv and mahp = @mahp)
+		insert into Sinhvien_ketqua
+		values(@msv,@mahp,null,null)
+end
+
+go
+create trigger tg_sv_deletehp on sinhvien_dkhocphan
+instead of delete
+as
+begin
+	declare @msv char(4),@mahp char(10)
+	select @msv = msv,@mahp = mahp from deleted
+	delete Sinhvien_ketqua where msv = @msv and mahp = @mahp
+	delete sinhvien_dkhocphan where mahp = @mahp and msv = @msv
+end
+
+--trigger tự động cập nhật cột học bổng trong bảng tổng hợp
+
+go
+create trigger tg_tonghop on hocbong
+for insert,update
+as
+begin
+	declare @msv char(4)
+	select @msv = msv from inserted
+	update tonghop set hocbong = N'Đạt' where msv = @msv
+end
+
+--cài đặt trigger khi xóa 1 sinh viên khi đó sẽ xóa dữ liệu của sinh viên này trong tất cả các bảng khác
+
+go
+create trigger tg_xoasv on sinhvien
+instead of delete
+as
+begin
+	declare @msv char(4)
+	select @msv = msv from deleted
+	delete tonghop where msv = @msv
+	while exists (select * from sinhvien_dkhocphan where msv =@msv)
+		delete sinhvien_dkhocphan where msv = @msv
+	delete sinhvien_renluyen where msv = @msv
+	if exists (select * from hocbong where msv=@msv)
+	begin
+		delete hocbong where msv =@msv
+	end
+	delete sinhvien where msv = @msv
+end
+
